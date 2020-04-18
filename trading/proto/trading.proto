@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+package cereris_trading;
+
+service Trading {
+    // Utils
+    rpc Ping (google.protobuf.Empty) returns (google.protobuf.Empty);
+    rpc GetServerTime (google.protobuf.Empty) returns (UnixTime);
+
+    // Markets
+    rpc GetMarkets (google.protobuf.Empty) returns (Markets);
+
+    // Pairs
+    rpc GetPairs (GetPairsRequest) returns (Pairs);
+
+    // Trades
+    rpc GetLastTrade (GetLastTradeRequest) returns (Trade);
+    rpc GetTrades (GetTradesRequest) returns (Trades);
+}
+
+// Utils
+message UnixTime {
+    uint64 seconds = 1;
+}
+
+// Markets
+message Market {
+    string name = 1;
+}
+
+message Markets {
+    repeated Market markets = 1;
+}
+
+// Pairs
+message GetPairsRequest {
+    string market = 1;
+}
+
+message Pair {
+    string base_asset = 1;
+    string quote_asset = 2;
+}
+
+message Pairs {
+    repeated Pair pairs = 1;
+}
+
+// Trades
+message GetLastTradeRequest {
+    string market = 1;
+    Pair pair = 2;
+}
+
+message Trade {
+    double price = 1;
+    double quantity = 2;
+    uint64 time = 3;
+}
+
+message GetTradesRequest {
+    string market = 1;
+    Pair pair = 2;
+    uint64 last_time = 3;
+    uint32 limit = 4;
+}
+
+message Trades {
+    repeated Trade trades = 1;
+}
